@@ -20,4 +20,11 @@ public class UserMapper implements AbstractMapper<User, UserView> {
             NullAwareBeanUtils.copyPropertiesWithoutNull(userView, user);
 
     }
+
+    @Override
+    public UserView entityToView(User user) {
+        UserView userView = new UserView();
+        NullAwareBeanUtils.copyPropertiesWithoutNull(user, userView);
+        return userView;
+    }
 }

@@ -9,6 +9,6 @@ public abstract class AbstractController {
     }
 
     protected <T> Response<?> getFailureResponse(T t, ErrorResponse error) {
-        return new Response<>(true, t, error);
+        return new Response<>(false, t, error);
     }
 }

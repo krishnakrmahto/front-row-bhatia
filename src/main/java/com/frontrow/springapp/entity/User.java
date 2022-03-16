@@ -9,12 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
+@Builder
 @Entity(name = "frontrow_user")
 @Table(name = "frontrow_user")
 public class User {

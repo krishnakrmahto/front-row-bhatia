@@ -1,13 +1,16 @@
 package com.frontrow.springapp.controller;
 
 import com.frontrow.springapp.pojo.CreateUserRequest;
+import com.frontrow.springapp.pojo.ErrorResponse;
 import com.frontrow.springapp.pojo.Response;
 import com.frontrow.springapp.pojo.UpdateUserRequest;
 import com.frontrow.springapp.pojo.UserView;
 import com.frontrow.springapp.service.UserService;
 import io.micrometer.core.annotation.Timed;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +32,25 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @Timed
     public Response<?> getById(@PathVariable("id") Long id) {
-        UserView userView = userService.getById(id);
-        return getSuccessResponse(userView);
+        Optional<UserView> user = userService.getById(id);
+        if (user.isPresent()) {
+            return getSuccessResponse(user.get());
+        }
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "",
+            "User not found");
+        return getFailureResponse(null, errorResponse);
     }
 
     @RequestMapping(value = "/name", method = RequestMethod.GET)
     @Timed
     public Response<?> getByName(@RequestParam("name") String name) {
-        UserView userView = userService.getByName(name);
-        return getSuccessResponse(userView);
+        Optional<UserView> user = userService.getByName(name);
+        if (user.isPresent()) {
+            return getSuccessResponse(user.get());
+        }
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "", "User not found");
+        return getFailureResponse(null, errorResponse);
+
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -50,14 +63,23 @@ public class UserController extends AbstractController {
     @RequestMapping(method = RequestMethod.PUT)
     @Timed
     public Response<?> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-        UserView userView = userService.update(updateUserRequest);
-        return getSuccessResponse(userView);
+        Optional<UserView> userView = userService.update(updateUserRequest);
+        if (userView.isPresent()) {
+            return getSuccessResponse(userView);
+        }
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "", "User not found");
+        return getFailureResponse(null, errorResponse);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @Timed
     public Response<?> deleteUser(@PathVariable Long id) {
-        UserView userView = userService.delete(id);
-        return getSuccessResponse(userView);
+        Optional<UserView> deletedUserView = userService.delete(id);
+        if (deletedUserView.isPresent()) {
+            return getSuccessResponse(deletedUserView);
+        }
+
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "", "User not found");
+        return getFailureResponse(null, errorResponse);
     }
 }
