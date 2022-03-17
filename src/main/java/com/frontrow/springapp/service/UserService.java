@@ -33,7 +33,7 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     @Cacheable(CacheName.USER_CACHE)
     public Optional<UserView> getById(Long id) {
-        return userRepository.getById(id)
+        return userRepository.findById(id)
             .map(userMapper::entityToView);
     }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
-    Optional<User> getById(Long id);
+    Optional<User> findById(Long id);
 
     Optional<User> findByName(String name);
 }

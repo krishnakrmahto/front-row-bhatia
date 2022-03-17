@@ -1,7 +1,7 @@
 package com.frontrow.springapp.exception.advice;
 
-import com.frontrow.springapp.exception.ResourceNotFoundException;
 import com.frontrow.springapp.pojo.ErrorResponse;
+import javax.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,12 +11,12 @@ import org.springframework.web.context.request.WebRequest;
 @RestControllerAdvice
 public class ApiExceptionAdvice {
 
-  @ExceptionHandler(ResourceNotFoundException.class)
+  @ExceptionHandler(EntityNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ErrorResponse resourceNotFoundException(ResourceNotFoundException e) {
+  public ErrorResponse resourceNotFoundException(EntityNotFoundException e) {
     return ErrorResponse.builder()
         .code(HttpStatus.NOT_FOUND.value())
-        .message(e.getMessage())
+        .message("Resource not found")
         .build();
   }
 
